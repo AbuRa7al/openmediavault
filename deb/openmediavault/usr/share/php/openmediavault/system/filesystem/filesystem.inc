@@ -553,6 +553,17 @@ class Filesystem extends \OMV\System\BlockDevice
 		$cmd = new \OMV\System\Process("wipefs", $cmdArgs);
 		$cmd->setRedirect2to1();
 		$cmd->execute();
+		
+		// Remove Partitioning.
+		$cmdArgs = [];
+		$cmdArgs[] = "if=/dev/zero";
+		$cmdArgs[] = "of=" . escapeshellarg($this->getParentDeviceFile());
+		$cmdArgs[] = "bs=1M";
+		$cmdArgs[] = "count=16";
+		$cmd = new \OMV\System\Process("dd", $cmdArgs);
+		$cmd->setRedirect2to1();
+		$cmd->execute();
+		unset($cmdArgs);
 	}
 
 	/**
